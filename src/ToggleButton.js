@@ -3,76 +3,76 @@ import { View, StyleSheet, TouchableOpacity, Text, Animated } from "react-native
 
 class ToggleButton extends Component {
   state = {
-    toggle: true,
+    toggle: false,
     animated: new Animated.Value(0)
   };
 
   _onPress() {
-    this.animateButton();
     const newState = !this.state.toggle;
+    this.animateButton();
     this.setState({ toggle: newState });
     this.props.onStateChange && this.props.onStateChange(newState);
   }
 
-  animateButton() {
+  animateButton(newState) {
+    this.state.animated.setValue(0);
     Animated.timing(this.state.animated, {
-      toValue: 1,
+      toValue: newState ? 1 : 0,
       duration: 1000
-    }).start;
+    }).start();
   }
 
   render() {
     const { toggle, animated } = this.state;
     const textValue = toggle ? "ON" : "OFF";
-    const buttonBg = toggle ? "dodgerblue" : "white";
+    const buttonBg = toggle ? "white" : "white";
     const textColor = toggle ? "white" : "black";
     return (
-      <View style={styles.container}>
-        <View
+      <View style={{ flexDirection: "row" }}>
+        <TouchableOpacity
+          onPress={() => this._onPress()}
           style={{
-            flexDirection: "row"
+            flex: 1,
+            margin: 10,
+            height: 60,
+            backgroundColor: buttonBg,
+            justifyContent: "center",
+            borderRadius: 30,
+            borderColor: "dodgerblue",
+            borderWidth: 2
           }}
         >
-          <TouchableOpacity
-            onPress={() => this._onPress()}
+          <Animated.View
             style={{
-              margin: 10,
-              height: 60,
+              position: "absolute",
+              left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0,
               flex: 1,
-              backgroundColor: buttonBg,
+              backgroundColor: "dodgerblue",
+              borderRadius: 30,
               justifyContent: "center",
-              borderColor: "dodgerblue",
-              borderWidth: 2
+              transform: [
+                {
+                  scale: animated.interpolate({
+                    inputRange: [0, 1],
+                    outputRange: [0, 1]
+                  })
+                }
+              ]
+            }}
+          />
+          <Text
+            style={{
+              color: textColor,
+              textAlign: "center",
+              fontSize: 16
             }}
           >
-            <Animated.View
-              style={{
-                flex: 1,
-                backgroundColor: "red",
-                borderRadius: 30,
-                justifyContent: "center",
-                transform: [
-                  {
-                    scale: animated.interpolate({
-                      inputRange: [0, 1],
-                      outputRange: [0, 1]
-                    })
-                  }
-                ]
-              }}
-            >
-              <Text
-                style={{
-                  color: textColor,
-                  textAlign: "center",
-                  fontSize: 16
-                }}
-              >
-                {textValue}
-              </Text>
-            </Animated.View>
-          </TouchableOpacity>
-        </View>
+            {textValue}
+          </Text>
+        </TouchableOpacity>
       </View>
     );
   }

@@ -1,9 +1,9 @@
-import React from "react";
+import React, { Component } from "react";
 import { View, Text, StyleSheet } from "react-native";
 
 import ToggleButton from "./src/ToggleButton";
 
-export default class App extends React.Component {
+export default class App extends Component {
   state = {
     value: ""
   };
@@ -31,6 +31,10 @@ export default class App extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "whitesmoke"
   }
 });
