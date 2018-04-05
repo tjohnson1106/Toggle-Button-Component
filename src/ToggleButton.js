@@ -1,21 +1,21 @@
 import React, { Component } from "react";
-import { View, StyleSheet, TouchableOpacity, Text, Animated } from "react-native";
+import { View, StyleSheet, TouchableOpacity, Text, Animated, Easing } from "react-native";
 
 class ToggleButton extends Component {
   state = {
-    toggle: false,
-    animated: new Animated.Value(0)
+    toggle: true,
+    animated: new Animated.Value(1)
   };
 
   _onPress() {
     const newState = !this.state.toggle;
-    this.animateButton();
+    this.animateButton(newState);
     this.setState({ toggle: newState });
     this.props.onStateChange && this.props.onStateChange(newState);
   }
 
   animateButton(newState) {
-    this.state.animated.setValue(0);
+    this.state.animated.setValue(newState ? 0 : 1);
     Animated.timing(this.state.animated, {
       toValue: newState ? 1 : 0,
       duration: 1000
@@ -25,8 +25,8 @@ class ToggleButton extends Component {
   render() {
     const { toggle, animated } = this.state;
     const textValue = toggle ? "ON" : "OFF";
-    const buttonBg = toggle ? "white" : "white";
     const textColor = toggle ? "white" : "black";
+    const buttonBg = toggle ? "dodgerblue" : "white";
     return (
       <View style={{ flexDirection: "row" }}>
         <TouchableOpacity
